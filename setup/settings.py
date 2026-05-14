@@ -15,8 +15,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Application definition
+#SIMPLE_JWT = {}
 
+AUTH_USER_MODEL = 'user.User'
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,9 +33,7 @@ INSTALLED_APPS = [
     'user',
 ]
 
-REST_FRAMEWORK = {
-
-}
+#REST_FRAMEWORK = {}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
