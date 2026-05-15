@@ -17,7 +17,7 @@ ALLOWED_HOSTS = []
 
 #SIMPLE_JWT = {}
 
-AUTH_USER_MODEL = 'user.User'
+AUTH_USER_MODEL = 'user.UserModel'
 
 # Application definition
 INSTALLED_APPS = [
@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'django-filters',
+    #'django-filter',
     'user',
 ]
 
