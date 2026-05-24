@@ -1,3 +1,4 @@
+import re
 from rest_framework import serializers
 from .models import UserModel
 
@@ -13,7 +14,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
         fields = [
             'id',
-            #'username',
             'name',
             'password',
             'password_confirm',
@@ -32,12 +32,17 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         if UserModel.objects.filter(email=value).exists():
             raise serializers.ValidationError("Email already exists.")
-        
         return value
 
     def validate_password(self, value):
         if len(value) < 8:
             raise serializers.ValidationError("Password must be at least 8 characters long.") 
+        if not re.search(r'[A-Z]', value):
+            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
+        if not re.search(r'[a-z]', value):
+            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
+        if not re.search(r'[0-9]', value):
+            raise serializers.ValidationError("Password must contain at least one digit.")
         return value
 
     def validate(self, attrs):
@@ -62,3 +67,9 @@ class RegisterSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
         instance.save()
         return instance
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    pass
+
+class ForgotPasswordConfirmSerializer(serializers.Serializer):
+    pass

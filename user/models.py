@@ -5,10 +5,15 @@ from .utils import RoleChoice
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('is_active', True)
+        
         if not email:
-            raise ValueError("The Email field is required.")
+            raise ValueError('The Email field is required.')
         if not password:
-            raise ValueError("The password field is required.")
+            raise ValueError('The password field is required.')
+        
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
@@ -16,9 +21,14 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
 
@@ -34,14 +44,26 @@ class UserModel(AbstractUser):
     phone_number = models.CharField(max_length=20, verbose_name='Phone Number')
     cpf = models.CharField(max_length=14, unique=True, verbose_name='CPF')
     cep = models.CharField(max_length=9, verbose_name='CEP')
-    #role = models.CharField(max_length=1, choices=RoleChoice.choices, default=RoleChoice.CUSTUMER, verbose_name='Role')
+    #role = models.CharField(
+    #    max_length=1,
+    #    choices=RoleChoice.choices,
+    #    default=RoleChoice.CUSTUMER,
+    #    verbose_name='Role',
+    #)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name', 'address', 'birth_date', 'phone_number', 'cpf', 'cep']
+    REQUIRED_FIELDS = [
+        'name',
+        'address',
+        'birth_date',
+        'phone_number',
+        'cpf',
+        'cep',
+    ]
 
     class Meta:
         verbose_name = 'Customer'
