@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 load_dotenv()
 
@@ -15,7 +16,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-#SIMPLE_JWT = {}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+}
 
 AUTH_USER_MODEL = 'user.UserModel'
 
@@ -33,7 +37,14 @@ INSTALLED_APPS = [
     'user',
 ]
 
-#REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    #'DEFAULT_PERMISSION_CLASSES': (
+    #    'rest_framework.permissions.IsAuthenticated',
+    #),
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
