@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from .utils import RoleChoice
 #from uuid import uuid4
 
 class CustomUserManager(BaseUserManager):
@@ -34,22 +33,25 @@ class CustomUserManager(BaseUserManager):
 
 
 class UserModel(AbstractUser):
+    class Role(models.TextChoices):
+        CUSTOMER = 'c', 'Customer'
+        SHOPKEEPER = 's', 'Shopkeeper'
     #id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     username = None 
     
     name = models.CharField(max_length=255, verbose_name='Full Name')
     email = models.EmailField(unique=True, verbose_name='Email Address')
-    address = models.CharField(max_length=255, verbose_name='Address')
-    birth_date = models.DateField(verbose_name='Birth Date')
-    phone_number = models.CharField(max_length=20, verbose_name='Phone Number')
-    cpf = models.CharField(max_length=14, unique=True, verbose_name='CPF')
-    cep = models.CharField(max_length=9, verbose_name='CEP')
-    #role = models.CharField(
-    #    max_length=1,
-    #    choices=RoleChoice.choices,
-    #    default=RoleChoice.CUSTUMER,
-    #    verbose_name='Role',
-    #)
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Address')
+    birth_date = models.DateField(blank=True, null=True, verbose_name='Birth Date')
+    phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name='Phone Number')
+    cpf = models.CharField(max_length=14, unique=True, blank=True, null=True, verbose_name='CPF')
+    cep = models.CharField(max_length=9, blank=True, null=True, verbose_name='CEP')
+    role = models.CharField(
+        max_length=1,
+        choices=Role.choices,
+        default=Role.CUSTOMER,
+        verbose_name='Role',
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -58,17 +60,14 @@ class UserModel(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
         'name',
-        'address',
-        'birth_date',
-        'phone_number',
-        'cpf',
-        'cep',
     ]
 
     class Meta:
-        verbose_name = 'Customer'
-        verbose_name_plural = 'Customers'
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
         ordering = ['name']
 
     def __str__(self):
         return f'{self.name} - {self.email}'
+    
+    
