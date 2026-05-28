@@ -12,8 +12,8 @@ urlpatterns = [
     path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    path('auth/register/<int:pk>', UpdateRetrieveDeleteCostumerViewSet.as_view(), name='customer-detail'),
-    path('auth/shopkeeper/<int:pk>', UpdateRetrieveDeleteShopkeeperViewSet.as_view(), name='shopkeeper-detail'),
+    path('auth/user/<int:pk>/edit/', UpdateRetrieveDeleteCostumerViewSet.as_view(), name='customer-detail'),
+    path('auth/shopkeeper/<int:pk>/edit/', UpdateRetrieveDeleteShopkeeperViewSet.as_view(), name='shopkeeper-detail'),
     
     path('auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot-password'),
     path('auth/reset-password/', ResetPasswordView.as_view(), name='reset-password'),
