@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     #'django-filter',
     'user',
+    'products',
 ]
 
 REST_FRAMEWORK = {
@@ -117,3 +118,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = 'static/'
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#DEFAULT_FROM_EMAIL = ''
+
+# URL Frontend
+FRONTEND_URL = 'http://localhost:3000'
