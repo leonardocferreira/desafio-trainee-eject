@@ -1,6 +1,9 @@
 import re
 from rest_framework import serializers
 from .models import UserModel
+from django.contrib.auth.password_validation import validate_password
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 
 class RegisterCustomerSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True)    
@@ -33,27 +36,15 @@ class RegisterCustomerSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'role',]
 
-    def validate_email(self, value):
-        if UserModel.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
-        return value
-
     def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Password must be at least 8 characters long.") 
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("Password must contain at least one digit.")
+        validate_password(value)
         return value
 
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')
         if password != password_confirm:
-            raise serializers.ValidationError("Passwords do not match.")
+            raise serializers.ValidationError('Passwords do not match.')
         return attrs
 
     def create(self, validated_data):
@@ -94,27 +85,15 @@ class RegisterShopkeeperSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
     
-    def validate_email(self, value):
-        if UserModel.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
-        return value
-    
     def validate_password(self, value):
-        if len(value) < 8:
-            raise serializers.ValidationError("Password must be at least 8 characters long.") 
-        if not re.search(r'[A-Z]', value):
-            raise serializers.ValidationError("Password must contain at least one uppercase letter.")
-        if not re.search(r'[a-z]', value):
-            raise serializers.ValidationError("Password must contain at least one lowercase letter.")
-        if not re.search(r'[0-9]', value):
-            raise serializers.ValidationError("Password must contain at least one digit.")
+        validate_password(value)
         return value
 
     def validate(self, attrs):
         password = attrs.get('password')
         password_confirm = attrs.pop('password_confirm')
         if password != password_confirm:
-            raise serializers.ValidationError("Passwords do not match.")
+            raise serializers.ValidationError('Passwords do not match.')
         return attrs
 
     def create(self, validated_data):
@@ -127,9 +106,50 @@ class RegisterShopkeeperSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
         validated_data.pop('password_confirm', None)
+        
         if password:
             instance.set_password(password)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        instance.save()
+        instance.save() 
         return instance
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    # sem validate_email por questões de segurança, para não expor se um email está registrado ou não
+    email = serializers.EmailField(required=True)
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uidb64 = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+    new_password = serializers.CharField(write_only=True, required=True)
+    confirm_password = serializers.CharField(write_only=True, required=True)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value
+    
+    def validate(self, data):
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
+        
+        if new_password != confirm_password:
+            raise serializers.ValidationError('Passwords do not match.')
+        
+        try:
+            uid = urlsafe_base64_decode(data['uidb64']).decode()
+            user = UserModel.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+            raise serializers.ValidationError('Token or UID is invalid.')
+        
+        if not default_token_generator.check_token(user, data['token']):
+            raise serializers.ValidationError('Invalid token.')
+        
+        data['user'] = user
+        return data
+    
+    def save(self):
+        user = self.validated_data['user']
+        new_password = self.validated_data['new_password']
+        user.set_password(new_password)
+        user.save()
+        return user
