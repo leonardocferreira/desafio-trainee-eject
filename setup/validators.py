@@ -2,6 +2,7 @@ import re
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
+#adiciona validação global de senha(necessário: letra maiuscula, minuscula e números.)
 class UpperLowerNumberValidator:
     def validate(self, password, user=None):
         if not re.search(r'[A-Z]', password):
