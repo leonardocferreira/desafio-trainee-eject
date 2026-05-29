@@ -3,12 +3,13 @@ from rest_framework.routers import DefaultRouter
 from .views import RegisterCustomerViewSet, RegisterShopkeeperViewSet, ForgotPasswordView, ResetPasswordView, UpdateRetrieveDeleteCostumerViewSet, UpdateRetrieveDeleteShopkeeperViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-router = DefaultRouter()
-router.register('auth/register', RegisterCustomerViewSet, basename='user')
-router.register('auth/shopkeeper', RegisterShopkeeperViewSet, basename='shopkeeper')
+userRouter = DefaultRouter()
+userRouter.register('auth/register', RegisterCustomerViewSet, basename='user')
+userRouter = DefaultRouter()
+userRouter.register('auth/shopkeeper/register', RegisterShopkeeperViewSet, basename='shopkeeper')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(userRouter.urls)),
     path('auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 

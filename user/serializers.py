@@ -50,7 +50,7 @@ class RegisterCustomerSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         validated_data.pop('password_confirm', None)
-        role = validated_data.get('role', UserModel.Role.CUSTOMER)
+        role = validated_data.pop('role', UserModel.Role.CUSTOMER)
         user = UserModel.objects.create_user(password=password,role=role,**validated_data)
         return user
 
@@ -99,7 +99,7 @@ class RegisterShopkeeperSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         validated_data.pop('password_confirm', None)
-        role = validated_data.get('role', UserModel.Role.SHOPKEEPER)
+        role = validated_data.pop('role', UserModel.Role.SHOPKEEPER)
         user = UserModel.objects.create_user(password=password,role=role,**validated_data)
         return user
 
