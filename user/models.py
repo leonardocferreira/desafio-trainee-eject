@@ -38,6 +38,7 @@ class UserModel(AbstractUser):
         CUSTOMER = 'c', 'Customer'
         SHOPKEEPER = 's', 'Shopkeeper'
     #id = models.UUIDField(primary_key=True, default=uuid4, editable=False) 
+    username = None
     name = models.CharField(max_length=255, verbose_name='Full Name')
     email = models.EmailField(unique=True, verbose_name='Email Address')
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Address')
@@ -66,10 +67,9 @@ class UserModel(AbstractUser):
         verbose_name_plural = 'Users'
         ordering = ['name']
 
-    def save(self, *args, **kwargs):
-        if not self.username:
-            self.username = self.email
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.username = self.email
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name} - {self.email}'

@@ -11,6 +11,10 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
         ordering = ['created_at']
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.strip().title()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return f'{self.name} - {self.created_at}'
 
