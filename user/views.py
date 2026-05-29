@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets, generics
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import AllowAny
 from .models import UserModel
 from .serializers import RegisterCustomerSerializer, RegisterShopkeeperSerializer, ForgotPasswordSerializer, ResetPasswordSerializer

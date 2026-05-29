@@ -9,15 +9,6 @@ class RegisterCustomerSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserModel
-        extra_kwargs = {
-            'email': {'required': True},
-            'password': {'write_only': True},
-            'address': {'required': True},
-            'birth_date': {'required': True},
-            'phone_number': {'required': True},
-            'cpf': {'required': True},
-            'cep': {'required': True},
-        }
         fields = [
             'id',
             'name',
@@ -33,6 +24,15 @@ class RegisterCustomerSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+        extra_kwargs = {
+            'email': {'required': True},
+            'password': {'write_only': True},
+            'address': {'required': True},
+            'birth_date': {'required': True},
+            'phone_number': {'required': True},
+            'cpf': {'required': True},
+            'cep': {'required': True},
+        }
         read_only_fields = ['id', 'role',]
 
     def validate_password(self, value):
@@ -68,11 +68,6 @@ class RegisterShopkeeperSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = UserModel
-        extra_kwargs = {
-            'email': {'required': True},
-            'password': {'write_only': True},
-        }
-        read_only_fields = ['id', 'role',]
         fields = [
             'id',
             'name',
@@ -83,6 +78,11 @@ class RegisterShopkeeperSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+        extra_kwargs = {
+            'email': {'required': True},
+            'password': {'write_only': True},
+        }
+        read_only_fields = ['id', 'role',]
     
     def validate_password(self, value):
         validate_password(value)
