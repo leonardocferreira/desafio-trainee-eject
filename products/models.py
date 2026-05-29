@@ -57,6 +57,7 @@ class Variant(models.Model):
     class Meta:
         verbose_name = 'Variant'
         verbose_name_plural = 'Variants'
+        unique_together = ('product', 'size', 'color')
         ordering = ['created_at']
 
     def __str__(self):

@@ -4,17 +4,36 @@ from .models import Category, Product, Variant
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'created_at', 'updated_at']
+        fields = [
+            'id',
+            'name',
+            'created_at',
+            'updated_at',
+        ]
+
+    def validate_name(self, value):
+        if Category.objects.filter(name=value.lower()).exists():
+            raise serializers.ValidationError("A category with this name already exists.")
+        return value
 
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
-        fields = ['id', 'product', 'size', 'color', 'stock', 'created_at', 'updated_at']
-    extra_kwargs = {
+        extra_kwargs = {
         'size': {'required': True},
         'color': {'required': True},
         'stock': {'required': True},
-    }
+        }
+        read_only_fields = ['product','created_at', 'updated_at']
+        fields = [
+            'id',
+            'product',
+            'size',
+            'color',
+            'stock',
+            'created_at',
+            'updated_at',
+        ]
 
     def validate_stock(self, value):
         if value < 0:

@@ -3,8 +3,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 #from uuid import uuid4
 from datetime import timedelta
 from django.utils import timezone
-from secrets import randbelow
-
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -34,7 +32,6 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
-
 
 class UserModel(AbstractUser):
     class Role(models.TextChoices):
@@ -73,6 +70,6 @@ class UserModel(AbstractUser):
         if not self.username:
             self.username = self.email
         super().save(*args, **kwargs)
-        
+
     def __str__(self):
         return f'{self.name} - {self.email}'
