@@ -51,6 +51,7 @@ class Variant(models.Model):
         WHITE = 'WHITE', 'White'
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='Variants')
+    #image
     size = models.CharField(max_length=10, choices=SizeChoices.choices, verbose_name='Variant Size')
     color = models.CharField(max_length=10, choices=ColorChoices.choices, verbose_name='Variant Color')
     stock = models.PositiveIntegerField(default=0, verbose_name='Stock Quantity')

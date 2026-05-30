@@ -41,14 +41,13 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             return [IsAdminOrShopkeeper()]
         return [AllowAny()]
     
-    def partial_update(self, request, pk=None):
-        try:
-            product = Product.objects.get(pk=pk)
-        except Product.DoesNotExist:
-            return Response({'error':'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-        product.is_active = request.data.get('is_active', product.is_active)
-        product.save()
-        return Response({'is_active':product.is_active}, status=status.HTTP_200_OK)
+    def patch(self, request, *args, **kwargs):
+        product = self.get_object()
+        data_updated = {'is_active': request.data.get('is_active', product.is_active)}
+        serializer = self.get_serializer(product,data=data_updated,partial=True)
+        serializer.is_valid()
+        serializer.save()
+        return Response({'id':product.id, 'is_active':product.is_active}, status=status.HTTP_200_OK)
         
 # ------- Variações
 

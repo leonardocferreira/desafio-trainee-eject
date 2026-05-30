@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlencode, urlsafe_base64_encode
+from validate_docbr import CPF
 
 def send_reset_email(user):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
@@ -22,3 +23,8 @@ def send_reset_email(user):
         recipient_list=[user.email],
         fail_silently=False,
     )
+
+def cpf_invalido(numero_cpf):
+    cpf = CPF()
+    cpf_valido = cpf.validate(numero_cpf)
+    return not cpf_valido 

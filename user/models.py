@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 #from uuid import uuid4
-from datetime import timedelta
-from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -66,10 +64,6 @@ class UserModel(AbstractUser):
         verbose_name = 'User'
         verbose_name_plural = 'Users'
         ordering = ['name']
-
-    # def save(self, *args, **kwargs):
-    #     self.username = self.email
-    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.name} - {self.email}'
