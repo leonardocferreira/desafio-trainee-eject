@@ -42,7 +42,7 @@ class RegisterCustomerSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if not valid_cpf(attrs.get('cpf')):
-            raise serializers.ValidationError({'cpf': 'CPF must have this format: "999.999.999-99"'})
+            raise serializers.ValidationError({'cpf': 'CPF must be valid and have this format: "999.999.999-99"'})
         if not valid_cep(attrs.get('cep')):
             raise serializers.ValidationError({'cep': 'CEP must have this format: "99999-999"'})
         if not valid_phone_number(attrs.get('phone_number')):

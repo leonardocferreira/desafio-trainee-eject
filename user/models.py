@@ -40,11 +40,11 @@ class UserModel(AbstractUser):
     username = None
     name = models.CharField(max_length=255, verbose_name='Full Name')
     email = models.EmailField(unique=True, verbose_name='Email Address')
-    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Address')
-    birth_date = models.DateField(blank=True, null=True, verbose_name='Birth Date')
-    phone_number = models.CharField(max_length=20, blank=True, null=True, verbose_name='Phone Number')
-    cpf = models.CharField(max_length=14, unique=True, blank=True, null=True, verbose_name='CPF')
-    cep = models.CharField(max_length=9, blank=True, null=True, verbose_name='CEP')
+    address = models.CharField(max_length=255, verbose_name='Address')
+    birth_date = models.DateField( verbose_name='Birth Date')
+    phone_number = models.CharField(max_length=20, verbose_name='Phone Number')
+    cpf = models.CharField(max_length=14, unique=True, verbose_name='CPF')
+    cep = models.CharField(max_length=9, verbose_name='CEP')
     role = models.CharField(
         max_length=1,
         choices=Role.choices,
