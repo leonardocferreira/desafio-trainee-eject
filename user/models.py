@@ -35,7 +35,8 @@ class UserModel(AbstractUser):
     class Role(models.TextChoices):
         CUSTOMER = 'c', 'Customer'
         SHOPKEEPER = 's', 'Shopkeeper'
-    #id = models.UUIDField(primary_key=True, default=uuid4, editable=False) 
+    
+    #id = models.UUIDField(primary_key=True, default=uuid4, editable=False) # uuid's sao melhores para a segurança em produção
     username = None
     name = models.CharField(max_length=255, verbose_name='Full Name')
     email = models.EmailField(unique=True, verbose_name='Email Address')

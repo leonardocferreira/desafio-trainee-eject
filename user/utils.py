@@ -23,8 +23,3 @@ def send_reset_email(user):
         recipient_list=[user.email],
         fail_silently=False,
     )
-
-def cpf_invalido(numero_cpf):
-    cpf = CPF()
-    cpf_valido = cpf.validate(numero_cpf)
-    return not cpf_valido 
