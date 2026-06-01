@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
 from .serializers import CategorySerializer, ProductSerializer, VariantSerializer
 from .models import Category, Product, Variant
 from .permissions import IsAdminOrShopkeeper
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework import status
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 # ------- Categorias
 
@@ -22,6 +24,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ProductListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category','price']
+    search_fields = ['name']
+    ordering_fields = ['price', 'name', 'created_at']
+    ordering = ['name']
 
     def get_permissions(self):
         if self.request.method == 'POST':
