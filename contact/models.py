@@ -7,6 +7,8 @@ class Contact(models.Model):
     subject = models.CharField(max_length=200, verbose_name='Subject')
     message = models.TextField(verbose_name='Message')
 
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Created At')
+
     class Meta:
         verbose_name = 'Contact'
         verbose_name_plural = 'Contacts'
