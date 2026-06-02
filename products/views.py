@@ -1,5 +1,5 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, generics, filters
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, generics
 from .serializers import CategorySerializer, ProductSerializer, VariantSerializer
 from .models import Category, Product, Variant
 from .permissions import IsAdminOrShopkeeper

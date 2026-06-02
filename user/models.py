@@ -42,7 +42,7 @@ class UserModel(AbstractUser):
     email = models.EmailField(unique=True, verbose_name='Email Address')
     address = models.CharField(max_length=255, verbose_name='Address')
     birth_date = models.DateField( verbose_name='Birth Date')
-    phone_number = models.CharField(max_length=20, verbose_name='Phone Number')
+    phone_number = models.CharField(max_length=14, verbose_name='Phone Number')
     cpf = models.CharField(max_length=14, unique=True, verbose_name='CPF')
     cep = models.CharField(max_length=9, verbose_name='CEP')
     role = models.CharField(

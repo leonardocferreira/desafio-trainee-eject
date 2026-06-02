@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django_filters',
     'user',
     'products',
+    'contact',
 ]
 
 REST_FRAMEWORK = {
