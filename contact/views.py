@@ -3,6 +3,7 @@ from .models import Contact
 from .serializers import ContactSerializer
 from .utils import send_contact_email
 from .permissions import IsAdminOrShopkeeper
+from .throttles import ContactAnonRateThrottle, ContactUserRateThrottle
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from rest_framework.permissions import AllowAny
 
 class ContactEmailView(APIView):
     permission_classes = [AllowAny,]
+    throttle_classes = [ContactAnonRateThrottle, ContactUserRateThrottle]
     def post(self, request):
         serializer = ContactSerializer(data=request.data)
         if serializer.is_valid():
