@@ -28,6 +28,7 @@ class VariantSerializer(serializers.ModelSerializer):
             'size',
             'color',
             'stock',
+            'image',
             'created_at',
             'updated_at',
         ]
