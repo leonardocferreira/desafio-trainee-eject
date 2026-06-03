@@ -16,6 +16,9 @@ class ContactSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at']
 
-        def validate(self, attrs):
-            if not valid_phone_number(attrs['phone_number']):
-                raise serializers.ValidationError({'phone_number': 'Phone number must have this format: "99 9 9999-9999".'})
+    def validate(self, attrs):
+        if not valid_phone_number(attrs.get('phone_number')):
+            raise serializers.ValidationError({'phone_number': 'Phone number must have this format: "99 9 9999-9999".'})
+        if not valid_name(attrs.get('name')):
+            raise serializers.ValidationError({'name': 'Name must have at least 2 characters and only letters.'})
+        return attrs        

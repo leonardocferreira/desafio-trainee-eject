@@ -3,7 +3,6 @@ from django.conf import settings
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlencode, urlsafe_base64_encode
-from validate_docbr import CPF
 
 def send_reset_email(user):
     uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
@@ -14,7 +13,7 @@ def send_reset_email(user):
     link_reset = f'{base_url}/reset-password-confirm?{query_params}'
     
     subject='Password Reset Request'
-    message=f"To request a password change, click the link to change it: {link_reset} \n\nIf you haven't requested one, ignore the email."
+    message=f'To request a password change, click the link to change it: {link_reset} \n\nIf you haven\'t requested one, ignore the email.'
     
     send_mail(
         subject=subject,
