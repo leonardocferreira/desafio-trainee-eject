@@ -2,8 +2,8 @@ from rest_framework import serializers
 from .models import CartOwner, CartItem
 from products.models import Variant
 
-class CartItemSerializer(serializers.ModelSerializer):
-    variant = serializers.StringRelatedField(source='variant')
+class CartItemSerializer(serializers.ModelSerializer): 
+    variant = serializers.StringRelatedField(source='variant', read_only=True)
     variant_name = serializers.PrimaryKeyRelatedField(queryset=Variant.objects.all())
 
     class Meta:
