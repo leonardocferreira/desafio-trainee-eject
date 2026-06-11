@@ -41,7 +41,7 @@ class VariantSerializer(serializers.ModelSerializer):
     
     def validate_stock(self, value):
         if value < 0:
-            raise serializers.ValidationError("Stock quantity cannot be negative.")
+            raise serializers.ValidationError('Stock quantity cannot be negative.')
         return value
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -72,5 +72,5 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def validate_price(self, value):
         if value <= 0:
-            raise serializers.ValidationError("Price must be a positive number.")
+            raise serializers.ValidationError('Price must be a positive number.')
         return value

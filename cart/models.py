@@ -13,10 +13,6 @@ class CartOwner(models.Model):
 
     def __str__(self):
         return f'CartOwner: {self.user.email}'
-
-    def total_price(self):
-        total = float(sum(item.sub_total() for item in self.cart_items.all()))
-        return total
     
 class CartItem(models.Model):
     cart = models.ForeignKey(CartOwner, on_delete=models.CASCADE, related_name='cart_items')
@@ -32,7 +28,3 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f''
-    
-    def sub_total(self):
-        subtotal = float(self.variant.product.price * self.quantity)
-        return subtotal
