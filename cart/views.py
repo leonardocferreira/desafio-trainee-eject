@@ -1,30 +1,36 @@
-from django.shortcuts import get_or_create
-from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
 from .serializers import CartOwnerSerializer, CartItemSerializer
 from .models import CartOwner, CartItem
-from products.models import Variant
 from .permissions import IsSelfOrAdmin
+from products.models import Variant
 
 class CartOwnerRetrieveView(generics.RetrieveAPIView):
     serializer_class = CartOwnerSerializer
 
     def get_object(self):
-        cart, _ = CartOwner.objects.get_or_create(user=self.request.user) # cria carrinho se não tiver
+        cart, _ = CartOwner.objects.get_or_create(user=self.request.user) # cria um carrinho se não tiver
         return cart
     
 class CartItemCreateView(generics.CreateAPIView):
     serializer_class = CartItemSerializer
 
     def perform_create(self, serializer):
-        cart, _ = CartOwner.objects.get_or_create(user=self.request.user) # cria um carrinho se nao tiver
-        product = Variant.objects.get(pk=serializer.validated_data['product_id'])
+        cart, _ = CartOwner.objects.get_or_create(user=self.request.user) # cria um carrinho se não tiver
+        variant = get_object_or_404(Variant, pk=serializer.validated_data['variant_id'])
         quantity = serializer.validated_data['quantity']
-        cart_item = CartItem.objects.filter(cart=cart, variant=product).first()
-        if cart_item:
-            cart_item.quantity += quantity
-            cart_item.save()
+        existing_item = CartItem.objects.filter(cart=cart, variant=variant).first()
+        if existing_item:
+            total_quantity = quantity + existing_item.quantity
+            if total_quantity > variant.stock:
+                raise ValidationError(f'Invalid quantity. We only have {variant.stock} in stock.')
+            existing_item.quantity = total_quantity
+            existing_item.save()
+            serializer.instance = existing_item
         else:
-            CartItem.objects.create(cart=cart, variant=product, quantity=quantity)
+            serializer.save(cart=cart, variant=variant, quantity=quantity)
 
 class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemSerializer
