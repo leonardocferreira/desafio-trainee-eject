@@ -3,8 +3,8 @@ from .models import CartOwner, CartItem
 from products.models import Variant
 
 class CartItemSerializer(serializers.ModelSerializer): 
-    variant = serializers.StringRelatedField(source='variant', read_only=True)
-    variant_name = serializers.PrimaryKeyRelatedField(queryset=Variant.objects.all())
+    variant_name = serializers.StringRelatedField(source='variant', read_only=True)
+    variant = serializers.PrimaryKeyRelatedField(queryset=Variant.objects.all())
 
     class Meta:
         model = CartItem
