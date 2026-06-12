@@ -16,6 +16,7 @@ class CartOwnerRetrieveView(generics.RetrieveAPIView):
     
 class CartItemCreateView(generics.CreateAPIView):
     serializer_class = CartItemSerializer
+    permission_classes = [IsSelfOrAdmin,]
 
     def perform_create(self, serializer):
         cart, _ = CartOwner.objects.get_or_create(user=self.request.user) # cria um carrinho se não tiver
@@ -38,3 +39,6 @@ class CartItemDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user)
+
+    def perform_update(self, serializer):
+        pass
